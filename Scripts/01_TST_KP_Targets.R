@@ -81,16 +81,13 @@ library(openxlsx)
            '87515_DSD'=`87515`/DataPackTarget) %>% 
     bind_rows(new_rows) %>% #bind the blank age rows to the dataset
     group_by(PSNU,indicator_code,Sex) %>% #group by psnu indicator and sex so that the KP % allocation can be filled for the new age rows
-    tidyr::fill(`81837_DSD`, .direction="down") %>% #fill in % KP allocation for this mech to all age rows
-    tidyr::fill(`87514_DSD`, .direction="down") %>% #fill in % KP allocation for this mech to all age rows
-    tidyr::fill(`87515_DSD`, .direction="down") %>% #fill in % KP allocation for this mech to all age rows
+    tidyr::fill(c(`81837_DSD`,`87514_DSD`,`87515_DSD`), .direction="down") %>%  #fill in % KP allocation for this mech to all age rows
     dplyr::ungroup() %>% 
-    filter(!is.na(ID)) %>% 
+    filter(!is.na(ID)) %>% #filter out our total rows
     select(-join,-`81837`,-`87514`,-`87515`,
            -`81837_DSD...13`,-`87514_DSD...19`,-`87515_DSD...20`) %>% 
     relocate(`81837_DSD`, .after=`70247_DSD...12`) %>% 
-    relocate(`87514_DSD`, .after=`86927_DSD...18`) %>% 
-    relocate (`87515_DSD`, .after=`87514_DSD`)
+    relocate(`87514_DSD`,`87515_DSD`, .after=`86927_DSD...18`)
 
   
   
